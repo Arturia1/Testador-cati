@@ -1,0 +1,254 @@
+/* --- 1. VARIÁVEIS DE AMBIENTE E TEMAS --- */
+:root {
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --accent-blue: #0985EB; /* Cor de Pressão */
+  --accent-green: #09EB44; /* Cor de Sucesso */
+  --danger: #dc2626;
+}
+
+.tester-wrapper.dark {
+  --bg-app: #0f172a;
+  --bg-chassis: #1e293b; /* Cor da carcaça */
+  --bg-plate: #0f172a;   /* Fundo onde as teclas "nascem" */
+  --text-main: #f8fafc;
+  --key-idle: #334155;
+  --key-border: #1e293b;
+  --key-shadow: #020617;
+}
+
+.tester-wrapper.light {
+  --bg-app: #f1f5f9;
+  --bg-chassis: #ffffff;
+  --bg-plate: #e2e8f0;
+  --text-main: #1e293b;
+  --key-idle: #f8fafc;
+  --key-border: #cbd5e1;
+  --key-shadow: #94a3b8;
+}
+
+/* --- 2. ESTRUTURA GLOBAL E RESPONSIVIDADE --- */
+.tester-wrapper {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(15px, 3vw, 40px);
+  transition: var(--transition);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Centraliza o conteúdo e evita que campos fiquem um sobre o outro */
+.keyboard-container-main {
+  background: var(--bg-chassis);
+  padding: 12px; /* Espessura da borda da carcaça */
+  border-radius: 12px;
+  border: 4px solid var(--bg-chassis);
+  /* Sombra externa para dar peso ao objeto */
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.3),
+    0 8px 10px -6px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255,255,255,0.1); 
+  width: 100%;
+  max-width: 1300px;
+  margin: 20px auto;
+}
+
+.keyboard-plate {
+  background: var(--bg-plate);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); /* Efeito de profundidade */
+}
+
+/* --- 3. GRID DO TECLADO (DINÂMICO) --- */
+.keyboard-grid {
+  display: grid;
+  gap: clamp(2px, 0.4vw, 6px);
+  /* Aspect-ratio garante que o layout não quebre ao redimensionar */
+  aspect-ratio: 25 / 7; 
+  width: 100%;
+}
+
+.key-unit {
+  background: var(--key-idle);
+  color: var(--text-main);
+  border: 1px solid var(--key-border);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: clamp(8px, 0.8vw, 12px);
+  position: relative;
+  /* Cria a base da tecla (efeito 3D) */
+  box-shadow: 0 4px 0 var(--key-shadow); 
+  transition: all 0.05s ease;
+  cursor: default;
+}
+
+/* --- 4. CORES DE DIAGNÓSTICO (ESTÁTICAS) --- */
+.key-unit.pressing {
+  background-color: #0985EB !important;
+  color: white !important;
+  transform: translateY(3px); /* Afunda a tecla */
+  box-shadow: 0 1px 0 #064e8c; /* Reduz a sombra da base */
+  filter: brightness(1.2);
+}
+
+.key-unit.tested {
+  background-color: #09EB44 !important;
+  color: #0f172a !important;
+  border-color: #059669;
+  box-shadow: 0 4px 0 #057a54; /* Sombra verde escura na base */
+}
+
+.key-unit span {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* --- 5. CABEÇALHO E BOTÕES DE AÇÃO --- */
+.tester-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Permite quebrar linha em telas muito pequenas */
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-approve, .btn-reject, .btn-reset {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-approve {
+  background: #059669;
+  color: white;
+  opacity: 0.5;
+}
+
+.btn-approve.active {
+  opacity: 1;
+  box-shadow: 0 4px 12px rgba(9, 235, 68, 0.3);
+}
+
+.btn-reject {
+  background: var(--danger);
+  color: white;
+}
+
+/* --- 6. ÁREA DE LAUDO TÉCNICO --- */
+.report-area {
+  background: var(--bg-card); 
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  margin-top: auto; /* Empurra para o final da tela */
+  animation: slideUp 0.3s ease-out;
+}
+
+.report-area textarea {
+  width: 100%;
+  height: clamp(80px, 15vh, 150px);
+  background: var(--bg-app);
+  border: 1px solid var(--key-border);
+  color: var(--text-main);
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  resize: none;
+  font-size: 14px;
+}
+
+/* --- 7. RODAPÉ DE STATUS --- */
+.status-footer {
+  margin-top: 15px;
+  padding: 10px;
+  border-top: 1px solid var(--border-color);
+  font-size: 13px;
+  color: var(--text-sub);
+  display: flex;
+  justify-content: space-between;
+}
+
+.highlight {
+  color: var(--accent-blue);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: bold;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Tecla em modo de seleção para reprovação */
+.key-unit.to-reject {
+  border: 2px solid #ef4444 !important;
+  animation: pulse-red 1s infinite;
+}
+
+/* Tecla no laudo final (Vermelho sólido) */
+.key-unit.failed-red {
+  background-color: #ef4444 !important;
+  color: white !important;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+}
+
+/* Tela de Resumo Centralizada */
+.summary-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 50px;
+}
+
+.summary-box {
+  background: var(--bg-card);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.keyboard-preview-centered {
+  margin: 30px 0;
+  padding: 20px;
+  background: #000;
+  border-radius: 15px;
+}
+
+.text-success { color: #09EB44; }
+.text-danger { color: #ef4444; }
+
+.btn-restart {
+  margin-top: 30px;
+  padding: 15px 40px;
+  background: #38bdf8;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes pulse-red {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
